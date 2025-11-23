@@ -1,11 +1,10 @@
-services:
-  # PostgreSQL Database
-  - type: pg
-    name: finstock-database
+databases:
+  - name: finstock-database
     plan: free
     databaseName: finstock
     user: finstock_user
 
+services:
   # Python Prophet Service
   - type: web
     name: finstock-python
