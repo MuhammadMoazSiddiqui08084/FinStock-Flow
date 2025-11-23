@@ -11,8 +11,8 @@ services:
     name: finstock-python
     env: python
     plan: free
-    buildCommand: pip install -r backend/py_forecast/requirements.txt
-    startCommand: cd backend/py_forecast && python server.py
+    buildCommand: pip install --upgrade pip && pip install -r backend/py_forecast/requirements.txt
+    startCommand: cd backend/py_forecast && python3 server.py
     envVars:
       - key: HOST
         value: 0.0.0.0
@@ -22,8 +22,8 @@ services:
     name: finstock-excel-parser
     env: python
     plan: free
-    buildCommand: pip install -r backend/py_forecast/requirements.txt
-    startCommand: cd backend/py_forecast && python excel_parser.py
+    buildCommand: pip install --upgrade pip && pip install -r backend/py_forecast/requirements.txt
+    startCommand: cd backend/py_forecast && python3 excel_parser.py
     envVars:
       - key: HOST
         value: 0.0.0.0
@@ -34,7 +34,7 @@ services:
     env: node
     plan: free
     buildCommand: cd backend && npm install && npm run build
-    startCommand: cd backend && npm start
+    startCommand: cd backend && node dist/server.js
     envVars:
       - key: NODE_ENV
         value: production
