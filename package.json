@@ -68,7 +68,7 @@
             "build": "vite build && cd backend && npm run build",
             "preview": "vite preview --port 4173 --host",
             "install:all": "npm install && cd backend && npm install && cd backend/py_forecast && pip install -r requirements.txt",
-            "start": "cd backend && npm start",
+            "start": "cd backend && node dist/server.js",
             "postinstall": "cd backend && npm install"
       }
 }

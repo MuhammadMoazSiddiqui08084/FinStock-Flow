@@ -41,6 +41,23 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000" }));
 
+// Health check endpoint
+app.get("/", (req: Request, res: Response) => {
+  res.json({ 
+    status: "ok", 
+    service: "FinStock Flow API",
+    version: "1.0.0",
+    endpoints: {
+      health: "/",
+      api: "/api"
+    }
+  });
+});
+
+app.get("/health", (req: Request, res: Response) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 // Ensure tmp directory exists
 const tmpDir = path.join(process.cwd(), "tmp");
 if (!fs.existsSync(tmpDir)) {
