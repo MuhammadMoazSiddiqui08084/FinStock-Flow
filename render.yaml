@@ -32,7 +32,7 @@ services:
     name: finstock-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm install && npm run build
+    buildCommand: cd backend && npm install --include=dev && npm run build
     startCommand: cd backend && node dist/server.js
     envVars:
       - key: NODE_ENV
