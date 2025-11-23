@@ -77,7 +77,19 @@ function createPoolConfig(): pg.PoolConfig {
   // If no DATABASE_URL or not a postgresql:// URL
   if (!finalDatabaseUrl || !finalDatabaseUrl.startsWith("postgresql://")) {
     if (process.env.NODE_ENV === "production") {
-      throw new Error("❌ DATABASE_URL is required in production! Please link the database in Render dashboard.");
+      console.error("❌ WARNING: DATABASE_URL is required in production! Service will start but database operations may fail.");
+      console.error("❌ Please link the database in Render dashboard → finstock-backend → Environment → DATABASE_URL");
+      // Return a dummy config - connection will fail gracefully on first query
+      return {
+        user: "postgres",
+        host: "localhost",
+        port: 5432,
+        database: "finstock",
+        ssl: false,
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
+      };
     }
     // Use defaults only for local dev
     return {
@@ -145,7 +157,7 @@ pool.on("error", (err: Error) => {
   console.error("❌ PostgreSQL pool error:", err.message);
 });
 
-// Initialize database schema
+// Initialize database schema (non-blocking)
 async function initializeDatabase() {
   const client = await pool.connect();
   try {
