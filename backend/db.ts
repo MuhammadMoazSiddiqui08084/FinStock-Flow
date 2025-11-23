@@ -51,30 +51,41 @@ console.log("   Working directory:", process.cwd());
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
   console.warn("⚠️ DATABASE_URL not found in environment variables!");
+  console.warn("⚠️ Make sure the database service is linked in Render!");
 } else {
   console.log("   DATABASE_URL length:", databaseUrl.length);
   // Show URL without password for security
   try {
     const url = new URL(databaseUrl);
+    const isLocalhost = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+    if (isLocalhost && process.env.NODE_ENV === "production") {
+      console.error("❌ ERROR: DATABASE_URL points to localhost in production!");
+      console.error("❌ This means the Render database isn't linked properly.");
+      console.error("❌ Please check Render dashboard → finstock-backend → Environment → DATABASE_URL");
+    }
     console.log("   Parsed URL:", `${url.protocol}//${url.username}@${url.host}${url.pathname}`);
   } catch (e) {
     console.log("   URL parse failed");
   }
 }
 
-// Use default if not set
-const finalDatabaseUrl = databaseUrl || "postgresql://localhost:5432/finstock";
+// Use default if not set (only for local dev)
+const finalDatabaseUrl = databaseUrl || (process.env.NODE_ENV === "production" ? null : "postgresql://localhost:5432/finstock");
 
 // Parse connection string and create config
 function createPoolConfig(): pg.PoolConfig {
-  // If no DATABASE_URL or not a postgresql:// URL, use defaults
+  // If no DATABASE_URL or not a postgresql:// URL
   if (!finalDatabaseUrl || !finalDatabaseUrl.startsWith("postgresql://")) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("❌ DATABASE_URL is required in production! Please link the database in Render dashboard.");
+    }
+    // Use defaults only for local dev
     return {
       user: "postgres",
       host: "localhost",
       port: 5432,
       database: "finstock",
-      ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+      ssl: false,
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
