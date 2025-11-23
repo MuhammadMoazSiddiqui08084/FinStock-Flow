@@ -846,7 +846,7 @@ app.get("/anomalies", async (req: Request, res: Response) => {
           const zScore = (amount - stats.mean) / stats.std;
 
           if (Math.abs(zScore) > 2) {
-            const severity =
+            const severity: "low" | "medium" | "high" =
               Math.abs(zScore) > 3 ? "high" : Math.abs(zScore) > 2.5 ? "medium" : "low";
             const reason =
               zScore > 0
