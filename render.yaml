@@ -64,7 +64,7 @@ services:
   - type: web
     name: finstock-frontend
     env: static
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL

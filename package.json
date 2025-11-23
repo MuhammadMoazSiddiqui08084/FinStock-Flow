@@ -65,7 +65,7 @@
             "dev:backend": "cd backend && npm run dev",
             "dev:python": "cd backend/py_forecast && (py server.py || python server.py || python3 server.py)",
             "dev:excel": "cd backend/py_forecast && (py excel_parser.py || python excel_parser.py || python3 excel_parser.py)",
-            "build": "vite build && cd backend && npm run build",
+            "build": "vite build",
             "preview": "vite preview --port 4173 --host",
             "install:all": "npm install && cd backend && npm install && cd backend/py_forecast && pip install -r requirements.txt",
             "start": "cd backend && node dist/server.js",
