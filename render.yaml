@@ -1,0 +1,76 @@
+services:
+  # PostgreSQL Database
+  - type: pspg
+    name: finstock-database
+    plan: free
+    databaseName: finstock
+    user: finstock_user
+
+  # Python Prophet Service
+  - type: web
+    name: finstock-python
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/py_forecast/requirements.txt
+    startCommand: cd backend/py_forecast && python server.py
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+
+  # Excel Parser Service
+  - type: web
+    name: finstock-excel-parser
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/py_forecast/requirements.txt
+    startCommand: cd backend/py_forecast && python excel_parser.py
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+
+  # Backend API Service
+  - type: web
+    name: finstock-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: finstock-database
+          property: connectionString
+      - key: PY_FORECAST_URL
+        fromService:
+          name: finstock-python
+          type: web
+          property: host
+      - key: EXCEL_PARSER_URL
+        fromService:
+          name: finstock-excel-parser
+          type: web
+          property: host
+      - key: GROK_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://finstock-frontend.onrender.com
+      - key: JWT_SECRET
+        generateValue: true
+
+  # Frontend Service (Static Site)
+  - type: web
+    name: finstock-frontend
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://finstock-backend.onrender.com
+      - key: NODE_ENV
+        value: production
+

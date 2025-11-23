@@ -1,0 +1,4 @@
+# This folder stores the SQLite database
+# Database files (*.db) are gitignored
+# The folder itself is tracked so it exists in git
+
