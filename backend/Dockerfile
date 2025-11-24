@@ -1,23 +1,19 @@
-# Use Node.js 20 LTS
 FROM node:20
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json first for caching
-COPY package*.json ./
-
 # Install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Copy all backend files
+# Copy all code
 COPY . .
 
 # Build TypeScript
 RUN npm run build
 
 # Expose backend port
-EXPOSE 4000
+EXPOSE 8000
 
-# Start backend server
-CMD ["npm", "start"]
+# Start server
+CMD ["node", "dist/server.js"]
