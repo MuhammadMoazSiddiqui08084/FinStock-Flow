@@ -8,8 +8,8 @@ import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
-import db from "./db";
-import { simpleMovingAverageForecast, callPythonForecast } from "./main";
+import db from "./db.js";
+import { simpleMovingAverageForecast, callPythonForecast } from "./main.js";
 
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
