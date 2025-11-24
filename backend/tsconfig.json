@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",          // Changed to CommonJS for Node compatibility
+    "module": "NodeNext",          // Changed to CommonJS for Node compatibility
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
